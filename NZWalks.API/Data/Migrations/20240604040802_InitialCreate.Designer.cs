@@ -9,11 +9,11 @@ using NZWalks.API.Data;
 
 #nullable disable
 
-namespace NZWalks.API.Migrations
+namespace NZWalks.API.Data.Migrations
 {
     [DbContext(typeof(NZWalksDbContext))]
-    [Migration("20240603023241_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20240604040802_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace NZWalks.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("NZWalks.API.Models.Difficulty", b =>
+            modelBuilder.Entity("NZWalks.API.Models.Domain.Difficulty", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,9 +38,26 @@ namespace NZWalks.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Difficulties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c39c996d-8e8d-497a-ae47-dd47de71c91d"),
+                            Name = "Easy"
+                        },
+                        new
+                        {
+                            Id = new Guid("621a47c3-1802-4035-a554-f0384ef752bb"),
+                            Name = "Medium"
+                        },
+                        new
+                        {
+                            Id = new Guid("1e224fad-5f91-412b-8856-9ec6e6c8f742"),
+                            Name = "Hard"
+                        });
                 });
 
-            modelBuilder.Entity("NZWalks.API.Models.Region", b =>
+            modelBuilder.Entity("NZWalks.API.Models.Domain.Region", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,9 +77,46 @@ namespace NZWalks.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Regions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("adf7e9d5-5c69-46a7-ab72-b63a0422bf3f"),
+                            Code = "SIUU",
+                            Name = "RONALDO",
+                            RegionImageUrl = "https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        },
+                        new
+                        {
+                            Id = new Guid("1a01cb28-325b-44d5-a428-bc642120ae31"),
+                            Code = "XIUUU",
+                            Name = "MESSI",
+                            RegionImageUrl = "https://images.pexels.com/photos/2592884/pexels-photo-2592884.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        },
+                        new
+                        {
+                            Id = new Guid("57d2b2f6-8e1a-4ea1-9158-874be2779ac6"),
+                            Code = "KEKE",
+                            Name = "ANH NAM",
+                            RegionImageUrl = "https://images.pexels.com/photos/2582614/pexels-photo-2582614.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        },
+                        new
+                        {
+                            Id = new Guid("ff70aff2-a853-468c-b612-0015762ca4b6"),
+                            Code = "XYZ",
+                            Name = "ABC",
+                            RegionImageUrl = "https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        },
+                        new
+                        {
+                            Id = new Guid("22e0bb74-dd7b-4050-afd1-a792ff68cba2"),
+                            Code = "BLA BLA",
+                            Name = "HUHI",
+                            RegionImageUrl = "https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                        });
                 });
 
-            modelBuilder.Entity("NZWalks.API.Models.Walk", b =>
+            modelBuilder.Entity("NZWalks.API.Models.Domain.Walk", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,9 +125,6 @@ namespace NZWalks.API.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("DifficultId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DifficultyId")
                         .HasColumnType("uniqueidentifier");
@@ -101,15 +152,15 @@ namespace NZWalks.API.Migrations
                     b.ToTable("Walks");
                 });
 
-            modelBuilder.Entity("NZWalks.API.Models.Walk", b =>
+            modelBuilder.Entity("NZWalks.API.Models.Domain.Walk", b =>
                 {
-                    b.HasOne("NZWalks.API.Models.Difficulty", "Difficulty")
+                    b.HasOne("NZWalks.API.Models.Domain.Difficulty", "Difficulty")
                         .WithMany()
                         .HasForeignKey("DifficultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NZWalks.API.Models.Region", "Region")
+                    b.HasOne("NZWalks.API.Models.Domain.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
