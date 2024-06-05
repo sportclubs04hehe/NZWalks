@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
@@ -23,6 +24,7 @@ namespace NZWalks.API.Controllers
         // CREATE WALK
         // POST: https://localhost:7010/api/Walks
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] CreateWalksDto createWalksDto)
         {
             var walk = _mapper.Map<Walk>(createWalksDto);
@@ -62,6 +64,7 @@ namespace NZWalks.API.Controllers
         // UPDATE
         // PUT: https://localhost:7010/api/Walks/update/YOUR_ID
         [HttpPut("update/{id:guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkDto updateWalkDto)
         {
             var walkDomain = _mapper.Map<Walk>(updateWalkDto);
@@ -73,6 +76,15 @@ namespace NZWalks.API.Controllers
             }
 
             return Ok(_mapper.Map<WalkDto>(walkDomain));
+        }
+
+        // UPDATE
+        // PUT: https://localhost:7010/api/Walks/delete/YOUR_ID
+        [HttpDelete("delete/{id:guid}")]
+        public async Task<IActionResult> Delete([FromRoute]Guid id)
+        {
+            await _walkRepository.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

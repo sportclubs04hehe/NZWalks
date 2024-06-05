@@ -46,7 +46,19 @@ namespace NZWalks.API.Repositories.Implements
                 await _context.SaveChangesAsync();
                 return walkExisting;
             }
-            return null;
+            throw new KeyNotFoundException($"Entity with Id {id} not found.");
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var walkExisting = await _context.Walks.FindAsync(id);
+
+            if( walkExisting == null)
+            {
+                throw new KeyNotFoundException($"Entity with Id {id} not found.");
+            }
+            _context.Remove(walkExisting);
+            await _context.SaveChangesAsync();
         }
     }
 }
