@@ -21,6 +21,28 @@ namespace NZWalks.API.Controllers
             _mapper = mapper;
         }
 
+        // GET ALL 
+        // GET: https://localhost:7010/api/Walks?filterOn=name&filterQuery=searchName&sortBy=name&isAscding=true&pageNumer&pageSize=5
+        [HttpGet]
+        public async Task<IActionResult> GetAll(
+            [FromQuery]string? filterOn,
+            [FromQuery]string? filterQuery,
+            [FromQuery]string? sortBy, 
+            [FromQuery]bool? isAscding,
+            [FromQuery]int pageNumer = 1,
+            [FromQuery]int pageSize = 1000)
+        {
+            var walks = await _walkRepository.GetAllAsync(
+                filterOn,filterQuery,
+                sortBy, isAscding ?? true,
+                pageNumer,pageSize
+                );
+
+            var walkDto = _mapper.Map<List<WalkDto>>(walks);
+
+            return Ok(walkDto);
+        }
+
         // CREATE WALK
         // POST: https://localhost:7010/api/Walks
         [HttpPost]
@@ -34,16 +56,6 @@ namespace NZWalks.API.Controllers
             var walksDto = _mapper.Map<WalkDto>(walk);
 
             return CreatedAtAction(nameof(GetById), new { id = walk.Id }, walksDto);
-        }
-
-        // GET ALL 
-        // GET: https://localhost:7010/api/Walks
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var walks = await _walkRepository.GetAllAsync();
-            var walkDto = _mapper.Map<List<WalkDto>>(walks);
-            return Ok(walkDto);
         }
 
         //GET BY ID
