@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace NZWalks.API.Migrations
+namespace NZWalks.API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedAuthentication : Migration
+    public partial class AddedAuthenticationJwt : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

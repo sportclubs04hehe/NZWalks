@@ -9,11 +9,11 @@ using NZWalks.API.Data;
 
 #nullable disable
 
-namespace NZWalks.API.Migrations
+namespace NZWalks.API.Data.Migrations
 {
     [DbContext(typeof(NZWalksAuthDbContext))]
-    [Migration("20240605120543_AddedAuthentication")]
-    partial class AddedAuthentication
+    [Migration("20240606003123_AddedAuthenticationJwt")]
+    partial class AddedAuthenticationJwt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
