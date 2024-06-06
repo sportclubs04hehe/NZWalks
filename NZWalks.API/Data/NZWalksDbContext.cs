@@ -13,6 +13,7 @@ namespace NZWalks.API.Data
         public DbSet<Difficulty> Difficulties => Set<Difficulty>();
         public DbSet<Region> Regions => Set<Region>();
         public DbSet<Walk> Walks => Set<Walk>();
+        public DbSet<Image> Images => Set<Image>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
