@@ -5,6 +5,8 @@ using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
+using System.Net;
+using System.Text.Json;
 
 namespace NZWalks.API.Controllers
 {
@@ -15,33 +17,38 @@ namespace NZWalks.API.Controllers
     {
         private readonly IWalkRepository _walkRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<WalksController> _logger;
 
         public WalksController(IWalkRepository walkRepository,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<WalksController> logger)
         {
             _walkRepository = walkRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // GET ALL 
         // GET: https://localhost:7010/api/Walks?filterOn=name&filterQuery=searchName&sortBy=name&isAscding=true&pageNumer&pageSize=5
         [HttpGet]
         public async Task<IActionResult> GetAll(
-            [FromQuery]string? filterOn,
-            [FromQuery]string? filterQuery,
-            [FromQuery]string? sortBy, 
-            [FromQuery]bool? isAscding,
-            [FromQuery]int pageNumer = 1,
-            [FromQuery]int pageSize = 1000)
+            [FromQuery] string? filterOn,
+            [FromQuery] string? filterQuery,
+            [FromQuery] string? sortBy,
+            [FromQuery] bool? isAscding,
+            [FromQuery] int pageNumer = 1,
+            [FromQuery] int pageSize = 1000)
         {
+            
             var walks = await _walkRepository.GetAllAsync(
-                filterOn,filterQuery,
+                filterOn, filterQuery,
                 sortBy, isAscding ?? true,
-                pageNumer,pageSize
+                pageNumer, pageSize
                 );
 
+            _logger.LogInformation("Phương thức GetAll() của Walks hoạt động");
             var walkDto = _mapper.Map<List<WalkDto>>(walks);
-
+            _logger.LogInformation($"Kết quả trả về: {JsonSerializer.Serialize(walkDto)}");
             return Ok(walkDto);
         }
 
@@ -63,16 +70,16 @@ namespace NZWalks.API.Controllers
         //GET BY ID
         // GET: https://localhost:7010/api/Walks/get-by-id/YOUR_ID
         [HttpGet("get-by-id/{id:guid}")]
-        public async Task<IActionResult> GetById([FromRoute]Guid id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var walk = await _walkRepository.GetByIdAsync(id);
 
-            if(walk == null)
+            if (walk == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<WalkDto>(walk));    
+            return Ok(_mapper.Map<WalkDto>(walk));
         }
 
         // UPDATE
@@ -95,7 +102,7 @@ namespace NZWalks.API.Controllers
         // UPDATE
         // PUT: https://localhost:7010/api/Walks/delete/YOUR_ID
         [HttpDelete("delete/{id:guid}")]
-        public async Task<IActionResult> Delete([FromRoute]Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             await _walkRepository.DeleteAsync(id);
             return NoContent();

@@ -8,10 +8,23 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
+using Serilog;
+using NZWalks.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+Console.OutputEncoding = Encoding.UTF8;
+
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/NZWalks_log.txt", rollingInterval: RollingInterval.Minute)
+    .MinimumLevel.Information()
+    .CreateLogger(); // ghi log trong console
+
+builder.Logging.ClearProviders(); // remove all default logging providers that ASP.NET Core sets up
+builder.Logging.AddSerilog(logger); // Add Serilog as logging provider for ASP.NET Core applications
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
@@ -65,6 +78,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddeware>();
 
 app.UseHttpsRedirection();
 
